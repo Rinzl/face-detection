@@ -125,7 +125,9 @@ while True:
 			# associated probability
 			# text = "{}: {:.2f}%".format(name, proba * 100)
 			if (looopCount > 5) :
-				cv2.imwrite("output-demo/face"+ str(int(round(time.time() * 1000))) +".jpg", frame)
+				fileName = "output-demo/face"+ str(int(round(time.time() * 1000))) +".jpg"
+				print("Save file " + fileName)
+				cv2.imwrite(fileName, frame)
 				looopCount = 0
 			looopCount = looopCount + 1
 			print('current count : ' + str(looopCount))

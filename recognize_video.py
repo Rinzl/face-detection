@@ -27,8 +27,12 @@ ap.add_argument("-d", "--detector", required=True,
 # 	help="path to model trained to recognize faces")
 # ap.add_argument("-l", "--le", required=True,
 # 	help="path to label encoder")
-ap.add_argument("-c", "--confidence", type=float, default=0.7,
+ap.add_argument("-c", "--confidence", type=float, default=0.85,
 	help="minimum probability to filter weak detections")
+ap.add_argument("-H", "--host", type=str, required=True,
+	help="Host to camera")
+ap.add_argument("-P", "--post", type=str, required=True,
+	help="Post to camera")
 args = vars(ap.parse_args())
 
 # load our serialized face detector from disk
@@ -48,8 +52,10 @@ detector = cv2.dnn.readNetFromCaffe(protoPath, modelPath)
 
 # initialize the video stream, then allow the camera sensor to warm up
 print("[INFO] starting video stream...")
+url = "rtsp://" + args["host"] + ":" + args["post"] +"/h264_ulaw.sdp"
+print("connnect to " + url)
 # vs = VideoStream(src="rtsp://192.168.0.12:8080/h264_ulaw.sdp").start()
-vs = VideoStream(src=0).start()
+vs = VideoStream(src=url).start()
 time.sleep(2.0)
 
 # start the FPS throughput estimator

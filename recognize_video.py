@@ -16,6 +16,16 @@ import cv2
 import os
 import time
 import threading
+import requests
+
+class myThread (threading.Thread):
+	def __init__(self, fileName):
+		threading.Thread.__init__(self)
+		self.fileName = fileName
+	def run(self):
+	   files = {'file': open(self.fileName, 'rb')}
+	   r = requests.post(urlUpload, files=files)
+	   print(r)
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -33,6 +43,8 @@ ap.add_argument("-H", "--host", type=str, required=True,
 	help="Host to camera")
 ap.add_argument("-P", "--post", type=str, required=True,
 	help="Post to camera")
+ap.add_argument("-U", "--upload", type=str, required=True,
+	help="Post to Server")
 args = vars(ap.parse_args())
 
 # load our serialized face detector from disk
@@ -54,6 +66,8 @@ detector = cv2.dnn.readNetFromCaffe(protoPath, modelPath)
 print("[INFO] starting video stream...")
 url = "rtsp://" + args["host"] + ":" + args["post"] +"/h264_ulaw.sdp"
 print("connnect to " + url)
+urlUpload = 'http://'+ args["upload"]+':4555/upload'
+print('server : ' + urlUpload)
 # vs = VideoStream(src="rtsp://192.168.0.12:8080/h264_ulaw.sdp").start()
 vs = VideoStream(src=url).start()
 time.sleep(2.0)
@@ -129,6 +143,9 @@ while True:
 				print("Save file " + fileName)
 				cv2.imwrite(fileName, frame)
 				looopCount = 0
+				thread = myThread(fileName)
+				thread.start()
+
 			looopCount = looopCount + 1
 			print('current count : ' + str(looopCount))
 			y = startY - 10 if startY - 10 > 10 else startY + 10

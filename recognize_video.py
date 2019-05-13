@@ -3,7 +3,7 @@
 #	--embedding-model openface_nn4.small2.v1.t7 \
 #	--recognizer output/recognizer.pickle \
 #	--le output/le.pickle
-
+# python recognize_video.py --host 192.168.0.12 --post 8080 --upload localhost
 # import the necessary packages
 # from imutils.video import VideoStream
 # from imutils.video import FPS
@@ -58,6 +58,6 @@ while True:
 	print("Save file " + fileName)
 	looopCount = 0
 	urllib.request.urlretrieve(url, fileName)
-	# thread = myThread(fileName)
-	# thread.start()
+	thread = myThread(fileName)
+	thread.start()
 	time.sleep(2.0)
